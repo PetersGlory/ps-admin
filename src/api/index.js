@@ -254,13 +254,15 @@ export default {
     })
   },
 
-  getProjectsOverview (params, cb, errorCb) {
-    apiAxios.get(config.PROJECTS.GET, { params })
-      .then((object) => {
-        cb(object.data)
-      })
-      .catch(e => {
-        errorCb(e)
-      })
+  getCategories (params) {
+    return new Promise((resolve, reject) => {
+      apiAxios.get(config.CATEGORY_URL)
+        .then((object) => {
+          resolve(object.data)
+        })
+        .catch(e => {
+          reject(e)
+        })
+    })
   }
 }

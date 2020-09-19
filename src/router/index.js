@@ -35,10 +35,10 @@ var route = [
         component: CategoryForm
       },
       {
-        path: 'category',
-        name: 'dashboard.category',
-        meta: { auth: true, name: 'category' },
-        component: CategoryMain
+        path: 'category/:id',
+        name: 'dashboard.category.edit',
+        meta: { auth: true, name: 'category Edit' },
+        component: CategoryForm
       }
     ]
   },
