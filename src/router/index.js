@@ -4,6 +4,8 @@ import * as helper from '@/services/helper'
 import VerticleLayout from '@/layouts/VerticleLayout'
 import CategoryMain from '@/views/Category/CategoryMain'
 import CategoryForm from '@/views/Category/CategoryForm'
+import ProductMain from '@/views/Product/ProductMain'
+import ProductForm from '@/views/Product/ProductForm'
 import DashboardLanding from '@/views/Dashboards/DashboardLanding'
 import AuthLayout from '@/layouts/AuthLayouts/AuthLayout'
 import SignIn from '@/views/AuthPages/Default/SignIn'
@@ -37,8 +39,26 @@ var route = [
       {
         path: 'category/:id',
         name: 'dashboard.category.edit',
-        meta: { auth: true, name: 'category Edit' },
+        meta: { auth: true, name: 'category edit' },
         component: CategoryForm
+      },
+      {
+        path: 'product',
+        name: 'dashboard.product',
+        meta: { auth: true, name: 'product' },
+        component: ProductMain
+      },
+      {
+        path: 'product/add',
+        name: 'dashboard.product.add',
+        meta: { auth: true, name: 'product add' },
+        component: ProductForm
+      },
+      {
+        path: 'product/:id',
+        name: 'dashboard.product.edit',
+        meta: { auth: true, name: 'product edit' },
+        component: ProductForm
       }
     ]
   },

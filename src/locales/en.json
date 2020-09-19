@@ -1,6 +1,7 @@
 {
     "sidebar": {
         "dashboard": "Dashboard",
-        "category": "Category"
+        "category": "Category",
+        "product": "Product"
     }
 }

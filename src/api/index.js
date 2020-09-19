@@ -264,5 +264,17 @@ export default {
           reject(e)
         })
     })
+  },
+
+  getProducts (params) {
+    return new Promise((resolve, reject) => {
+      apiAxios.get(config.PRODUCT_URL)
+        .then((object) => {
+          resolve(object.data)
+        })
+        .catch(e => {
+          reject(e)
+        })
+    })
   }
 }

@@ -19,5 +19,17 @@
         "class_name": "",
         "is_icon_class": true,
         "icon": "ri-home-4-line"
+    },
+    {
+        "title": "Product",
+        "name": "sidebar.product",
+        "is_heading": false,
+        "is_active": false,
+        "link": {
+            "name": "dashboard.product"
+        },
+        "class_name": "",
+        "is_icon_class": true,
+        "icon": "ri-home-4-line"
     }
 ]
