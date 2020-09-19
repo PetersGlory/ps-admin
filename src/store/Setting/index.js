@@ -1,7 +1,6 @@
 import getters from './getters'
 import actions from './actions'
 import mutations from './mutations'
-import SideBarItems from '../../FackApi/json/GlobalSearch'
 
 const state = {
   horizontalMenu: false,
@@ -39,7 +38,20 @@ const state = {
       password: 'admin123'
     }
   ],
-  globalSearch: SideBarItems,
+  globalSearch: [
+    {
+      title: 'TreeView',
+      name: 'sidebar.treeView',
+      is_heading: false,
+      is_active: false,
+      link: {
+        name: 'app.treeview'
+      },
+      class_name: '',
+      is_icon_class: true,
+      icon: 'ri-git-merge-line'
+    }
+  ],
   bookmark: [
     {
       title: 'Video Chat',

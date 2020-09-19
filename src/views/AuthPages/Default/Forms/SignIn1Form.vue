@@ -1,12 +1,12 @@
 <template>
   <ValidationObserver ref="form" v-slot="{ handleSubmit }">
     <form class="mt-4" novalidate @submit.prevent="handleSubmit(onSubmit)">
-      <ValidationProvider vid="email" name="E-mail" rules="required|email" v-slot="{ errors }">
+      <ValidationProvider vid="username" name="username" rules="required" v-slot="{ errors }">
         <div class="form-group">
-          <label for="emailInput">Email address</label>
-          <input type="email" :class="'form-control mb-0' +(errors.length > 0 ? ' is-invalid' : '')"
-                 id="emailInput" aria-describedby="emailHelp"
-                 v-model="user.email" placeholder="Enter email" required>
+          <label for="username">Username</label>
+          <input type="text" :class="'form-control mb-0' +(errors.length > 0 ? ' is-invalid' : '')"
+                 id="username"
+                 v-model="user.username" placeholder="Enter username" required>
           <div class="invalid-feedback">
             <span>{{ errors[0] }}</span>
           </div>
@@ -47,24 +47,25 @@
 </template>
 
 <script>
-import auth from '../../../../services/auth'
-import firebase from 'firebase'
 import SocialLoginForm from './SocialLoginForm'
-import { core } from '../../../../config/pluginInit'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'SignIn1Form',
   components: { SocialLoginForm },
-  props: ['formType', 'email', 'password'],
+  props: ['formType', 'username', 'password'],
   data: () => ({
     user: {
-      email: '',
+      username: '',
       password: ''
+    },
+    message: {
+      type: '',
+      data: []
     }
   }),
   mounted () {
-    this.user.email = this.$props.email
+    this.user.username = this.$props.username
     this.user.password = this.$props.password
   },
   computed: {
@@ -74,68 +75,14 @@ export default {
   },
   methods: {
     onSubmit () {
-      if (this.formType === 'passport') {
-        this.passportLogin()
-      } else if (this.formType === 'jwt') {
-        this.jwtLogin()
-      } else if (this.formType === 'firebase') {
-        this.firebaseLogin()
-      }
-    },
-    passportLogin () {
-      auth.login(this.user).then(response => {
-        if (response.status) {
-          localStorage.setItem('user', JSON.stringify(response.data))
-          this.$router.push({ name: 'dashboard.home-1' })
-        } else if (response.data.errors.length > 0) {
-          this.$refs.form.setErrors(response.data.errors)
-        }
-      }).finally(() => { this.loading = false })
+      this.jwtLogin()
     },
     jwtLogin () {
-      const selectedUser = this.stateUsers.find(user => {
-        return (user.email === this.user.email && user.password === this.user.password)
-      }) || null
-      if (selectedUser) {
-        this.$store.dispatch('Setting/authUserAction', {
-          auth: true,
-          authType: 'jwt',
-          user: {
-            id: selectedUser.uid,
-            name: selectedUser.name,
-            mobileNo: null,
-            email: selectedUser.email,
-            profileImage: null
-          }
-        })
-        localStorage.setItem('user', JSON.stringify(selectedUser))
-        localStorage.setItem('access_token', selectedUser.token)
-        this.$router.push({ name: 'dashboard.home-1' })
+      var credentials = {
+        username: this.user.username,
+        password: this.user.password
       }
-    },
-    firebaseLogin () {
-      firebase.auth().signInWithEmailAndPassword(this.user.email, this.user.password).then((user) => {
-        const firebaseUser = firebase.auth().currentUser.providerData[0]
-        this.$store.dispatch('Setting/authUserAction', {
-          auth: true,
-          authType: 'firebase',
-          user: {
-            id: firebaseUser.uid,
-            name: firebaseUser.displayName,
-            mobileNo: firebaseUser.phoneNumber,
-            email: firebaseUser.email,
-            profileImage: firebaseUser.photoURL
-          }
-        })
-        localStorage.setItem('user', JSON.stringify(firebaseUser))
-        this.$router.push({ name: 'dashboard.home-1' })
-      }).catch((err) => {
-        if (err.code === 'auth/user-not-found') {
-          core.showSnackbar('error', 'These credentials do not match our records.')
-        } else {
-          core.showSnackbar('error', err.message)
-        }
-      })
+      this.$auth.login(this, credentials, '/')
     }
   }
 }
