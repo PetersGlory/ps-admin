@@ -76,17 +76,13 @@ export default {
   },
   // To log out, we just need to remove the token
   logout (context) {
-    API.logout({},
+    API.logout().then(
       data => {
         this.logoutClientSide()
-      },
+      }).catch(
       e => {
         this.logoutClientSide()
-        /* context.message.type = 'error';
-                context.message.data = helper.formatError(e);
-                context.success = false; */
-      }
-    )
+      })
   },
   logoutClientSide () {
     helper.eraseCookie('jwt-token')

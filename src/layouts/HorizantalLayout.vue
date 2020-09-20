@@ -462,9 +462,7 @@ export default {
       this.updateRadio()
     },
     logout () {
-      localStorage.removeItem('user')
-      localStorage.removeItem('access_token')
-      this.$router.push({ name: 'auth1.sign-in1' })
+      this.$auth.logout()
     },
     langChange (lang) {
       this.langChangeState(lang)

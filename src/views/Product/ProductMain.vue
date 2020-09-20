@@ -6,14 +6,14 @@
           <template v-slot:headerTitle>
             <router-link :to="{ name : 'dashboard.category.edit' , params:{ id : item.id }}">
               <h4 class="card-title"> <strong>{{item.product_name}}</strong></h4>
-              <h6 class="card-title"> <strong>{{item.product_code}}</strong></h6>
+              <p class="mb-1">SKU Code : <strong>{{item.product_code}}</strong></p>
             </router-link>
           </template>
           <template v-slot:body>
             <p class="mb-1">Category : <strong>{{item.category_name}}</strong></p>
             <p class="mb-1">Sub Category : <strong>{{item.sub_category_name}}</strong></p>
             <p class="mb-1 text-center"><img class="img-bound" :src="'https://pujasahitya.s3.ap-south-1.amazonaws.com/'+item.default_img" :alt="item.product_name"></p>
-            <p class="mb-1"> Price : <strong>{{item.price}}</strong></p>
+            <p class="mb-1"> Price : <strong><span v-html="$config.CURRENCY_ICON"></span> {{item.price}}</strong></p>
             <p class="mb-1">Minimum Stock : <strong>{{item.minimum_stock}}</strong></p>
             <p class="mb-1">
               <b-form-checkbox v-model="item.is_cod" :disabled="true" name="check-button" switch inline :key="item.id+'cod'">
@@ -26,8 +26,9 @@
     </b-row>
     {{paginationInfo}}
      <b-pagination value="1"
-              :total-rows="pagination.total"
-              @change="onPageChange"
+        :perPage="10"
+        :total-rows="pagination.total"
+        @change="onPageChange"
     ></b-pagination>
  </b-container>
 </template>
@@ -82,14 +83,14 @@ export default {
     },
     init () {
       this.queryParams.offset = this.pagination.offset
-      this.queryParams.pagesize = this.pagination.pageSize
+      this.queryParams.limit = this.pagination.pageSize
       API.getProducts({
         ...this.queryParams
       }).then(response => {
         this.products = response.results
         this.pagination = {
           pageSize: 10,
-          offset: response.offset,
+          offset: response.offset || 1,
           total: response.count
         }
       }).catch(e => {

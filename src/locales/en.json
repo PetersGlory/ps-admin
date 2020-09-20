@@ -3,5 +3,10 @@
         "dashboard": "Dashboard",
         "category": "Category",
         "product": "Product"
+    },
+    "nav": {
+        "user": {
+            "signout": "Sign Out"
+        }
     }
 }

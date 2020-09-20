@@ -8,6 +8,11 @@
               <h4 class="card-title">{{item.category_name}}</h4>
             </router-link>
           </template>
+          <template v-slot:headerAction>
+            <router-link :to="{ name : 'dashboard.category.edit' , params:{ id : item.id }}" title="Edit">
+              <i class="las la-pen"></i>
+            </router-link>
+          </template>
           <template v-slot:body>
             <div>
               Sub Category : <strong>{{item.sub_category.length}}</strong>
@@ -70,7 +75,7 @@ export default {
     },
     init () {
       this.queryParams.offset = this.pagination.offset
-      this.queryParams.pagesize = this.pagination.pageSize
+      this.queryParams.limit = this.pagination.pageSize
       API.getCategories({
         ...this.queryParams
       }).then(response => {

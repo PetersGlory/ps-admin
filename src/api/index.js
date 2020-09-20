@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import nprogress from 'nprogress'
 import axios from 'axios'
 import config from '@/services/config'
@@ -6,8 +7,8 @@ import * as helper from '@/services/helper'
 
 const headers = {
   Accept: 'application/json, text/plain, */*',
-  'Content-Type': 'application/json',
-  'x-apikey': config.API_KEY
+  'Content-Type': 'application/json'
+  // 'x-apikey': config.API_KEY
   // 'User-Agent': navigator.userAgent
 }
 const apiAxios = axios.create({
@@ -32,10 +33,12 @@ const requestLogger = {
 apiAxios.interceptors.request.use(function (config) {
   var date = new Date()
   var timestamp = date.getTime()
+  console.log(config)
   // Do something before request is sent
   nprogress.start()
-  config.headers.interactionId = interactionId()
   config.RequestTimestamp = timestamp
+  // config.params.tm = timestamp
+  config.params = { ...config.params, t: timestamp }
   return config
 }, function (error) {
   // Do something with request error
@@ -60,6 +63,9 @@ apiAxios.interceptors.response.use(function (response) {
   return response
 }, function (error) {
   // Do something with response error
+  if (error.response.status === 401) {
+    auth.logout()
+  }
   nprogress.done()
   return Promise.reject(error)
 })
@@ -231,14 +237,16 @@ export default {
   },
 
   // logout
-  logout (params, cb, errorCb) {
-    apiAxios.delete(config.LOGOUT_URL)
-      .then((object) => {
-        cb(object.data)
-      })
-      .catch(e => {
-        errorCb(e)
-      })
+  logout () {
+    return new Promise((resolve, reject) => {
+      apiAxios.post(config.LOGOUT_URL)
+        .then((object) => {
+          resolve(object.data)
+        })
+        .catch(e => {
+          reject(e)
+        })
+    })
   },
 
   // delete sessions
@@ -256,7 +264,91 @@ export default {
 
   getCategories (params) {
     return new Promise((resolve, reject) => {
-      apiAxios.get(config.CATEGORY_URL)
+      apiAxios.get(config.CATEGORY_URL, {
+        params: {
+          ...params
+        }
+      })
+        .then((object) => {
+          resolve(object.data)
+        })
+        .catch(e => {
+          reject(e)
+        })
+    })
+  },
+
+  getCategoryById (params) {
+    return new Promise((resolve, reject) => {
+      apiAxios.get(config.CATEGORY_URL + '/' + params.id)
+        .then((object) => {
+          resolve(object.data)
+        })
+        .catch(e => {
+          reject(e)
+        })
+    })
+  },
+  addCategory (params) {
+    return new Promise((resolve, reject) => {
+      apiAxios.post(config.CATEGORY_URL + '/', params)
+        .then((object) => {
+          resolve(object.data)
+        })
+        .catch(e => {
+          reject(e)
+        })
+    })
+  },
+  saveCategory (params) {
+    return new Promise((resolve, reject) => {
+      apiAxios.put(config.CATEGORY_URL + '/' + params.id + '/', params)
+        .then((object) => {
+          resolve(object.data)
+        })
+        .catch(e => {
+          reject(e)
+        })
+    })
+  },
+
+  deleteCategory (params) {
+    return new Promise((resolve, reject) => {
+      apiAxios.delete(config.CATEGORY_URL + '/' + params.id)
+        .then((object) => {
+          resolve(object.data)
+        })
+        .catch(e => {
+          reject(e)
+        })
+    })
+  },
+  addSubCategories (params) {
+    return new Promise((resolve, reject) => {
+      apiAxios.post(config.SUB_CATEGORY_URL + '/', params)
+        .then((object) => {
+          resolve(object.data)
+        })
+        .catch(e => {
+          reject(e)
+        })
+    })
+  },
+  saveSubCategories (params) {
+    return new Promise((resolve, reject) => {
+      apiAxios.put(config.SUB_CATEGORY_URL + '/' + params.id + '/', params)
+        .then((object) => {
+          resolve(object.data)
+        })
+        .catch(e => {
+          reject(e)
+        })
+    })
+  },
+
+  deleteSubCategories (params) {
+    return new Promise((resolve, reject) => {
+      apiAxios.delete(config.SUB_CATEGORY_URL + '/' + params.id)
         .then((object) => {
           resolve(object.data)
         })
@@ -268,7 +360,11 @@ export default {
 
   getProducts (params) {
     return new Promise((resolve, reject) => {
-      apiAxios.get(config.PRODUCT_URL)
+      apiAxios.get(config.PRODUCT_URL, {
+        params: {
+          ...params
+        }
+      })
         .then((object) => {
           resolve(object.data)
         })
