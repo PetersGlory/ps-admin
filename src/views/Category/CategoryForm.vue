@@ -241,11 +241,13 @@ export default {
       })
     },
     deleteSubCategory (subCategory) {
-      API.deleteSubCategories(subCategory).then(data => {
-        this.init()
-      }).catch(e => {
-        this.init()
-      })
+      if (confirm('Are you sure, you want to delete this sub category?')) {
+        API.deleteSubCategories(subCategory).then(data => {
+          this.init()
+        }).catch(e => {
+          this.init()
+        })
+      }
     },
     resetAddSubCategory () {
       this.addSubCategoryInitData = {
@@ -254,9 +256,11 @@ export default {
       }
     },
     deleteCategory () {
-      API.deleteCategory(this.categoryData).then(data => {
-        this.$router.push({ name: 'dashboard.category' })
-      }).catch(e => {})
+      if (confirm('Are you sure, you want to delete this category?')) {
+        API.deleteCategory(this.categoryData).then(data => {
+          this.$router.push({ name: 'dashboard.category' })
+        }).catch(e => {})
+      }
     },
     editCategory () {
       this.mainReadOnly = false

@@ -33,7 +33,6 @@ const requestLogger = {
 apiAxios.interceptors.request.use(function (config) {
   var date = new Date()
   var timestamp = date.getTime()
-  console.log(config)
   // Do something before request is sent
   nprogress.start()
   config.RequestTimestamp = timestamp
